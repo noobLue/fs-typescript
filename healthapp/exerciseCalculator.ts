@@ -1,3 +1,5 @@
+import { isNumber } from "./validators.ts";
+
 
 interface Result {
     periodLength: number,
@@ -15,7 +17,7 @@ const calculateExercises = (hours: number[], target_p: number): Result => {
     let periodLength = hours.length;
     let trainingDays = hours.reduce((acc, v) => { return acc + (v > 0 ? 1 : 0) }, 0);
     let target = target_p;
-    let average = hours.reduce((acc, v) => acc+v) / periodLength;
+    let average = hours.reduce((acc, v) => acc + v) / periodLength;
 
     let success = average > target;
     let rating: Result["rating"];
@@ -49,4 +51,26 @@ const calculateExercises = (hours: number[], target_p: number): Result => {
     };
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+interface Input {
+    arr: number[],
+    target: number
+}
+
+const processArgs = (): Input => {
+    if(process.argv.length < 4) throw new Error("Missing arguments");
+    if(!isNumber(process.argv[2])) throw new Error("Target was not a number");
+    const target = Number(process.argv[2]);
+
+    const arr: number[] = [];
+    for(let i: number = 3; i < process.argv.length; i++)
+    {
+        if(!isNumber(process.argv[i])) throw new Error(`Param ${i - 2} was not a number`);
+        arr.push(Number(process.argv[i]));
+    }
+
+    return {target, arr};
+}
+
+
+const input: Input = processArgs();
+console.log(calculateExercises(input.arr, input.target));

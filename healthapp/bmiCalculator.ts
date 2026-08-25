@@ -1,4 +1,4 @@
-
+import { isNumber } from "./validators.ts";
 
 
 const calculateBmi = (height: number, weight: number): string => {
@@ -38,5 +38,23 @@ const calculateBmi = (height: number, weight: number): string => {
     }
 }
 
+interface Input {
+    weight: number,
+    height: number,
+}
 
-console.log(calculateBmi(180, 74))
+const processArgs = (): Input => {
+    if(process.argv.length !== 4) throw new Error("Wrong amount of arguments");
+    
+    if(!isNumber(process.argv[2])) throw new Error("Argument 1 is not number");
+    if(!isNumber(process.argv[3])) throw new Error("Argument 2 is not number");
+
+    let weight: number = Number(process.argv[3]); 
+    let height: number = Number(process.argv[2]);
+
+    return {weight, height};
+}
+
+let input: Input = processArgs();
+
+console.log(calculateBmi(input.height, input.weight))

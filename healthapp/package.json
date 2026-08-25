@@ -10,8 +10,9 @@
   },
   "author": "",
   "license": "ISC",
-  "type":"module",
-  "devDependencies": {                                                
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^26.3.0",
     "typescript": "^7.0.2"
   }
 }
