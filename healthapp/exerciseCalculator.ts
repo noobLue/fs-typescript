@@ -14,12 +14,12 @@ interface Result {
 const calculateExercises = (hours: number[], target_p: number): Result => {
     if(hours.length == 0) throw new Error("array length is 0");
 
-    let periodLength = hours.length;
-    let trainingDays = hours.reduce((acc, v) => { return acc + (v > 0 ? 1 : 0) }, 0);
-    let target = target_p;
-    let average = hours.reduce((acc, v) => acc + v) / periodLength;
+    const periodLength = hours.length;
+    const trainingDays = hours.reduce((acc, v) => { return acc + (v > 0 ? 1 : 0); }, 0);
+    const target = target_p;
+    const average = hours.reduce((acc, v) => acc + v) / periodLength;
 
-    let success = average > target;
+    const success = average > target;
     let rating: Result["rating"];
     let ratingDescription: Result["ratingDescription"];
 
@@ -45,11 +45,10 @@ const calculateExercises = (hours: number[], target_p: number): Result => {
         success,
         rating,
         ratingDescription,
-
         target,
         average,
     };
-}
+};
 
 interface Input {
     arr: number[],
@@ -69,7 +68,7 @@ const processArgs = (): Input => {
     }
 
     return {target, arr};
-}
+};
 
 
 const input: Input = processArgs();

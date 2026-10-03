@@ -8,16 +8,21 @@
     "calculateExercises": "tsc && node exerciseCalculator.ts",
     "start": "tsc && node index.ts",
     "dev": "concurrently \"tsc --watch\" \"node --watch-preserve-output --watch index.ts\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@types/express": "^5.0.6",
     "@types/node": "^26.3.0",
     "concurrently": "^10.0.5",
-    "typescript": "^7.0.2"
+    "eslint": "^10.12.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.71.0"
   },
   "dependencies": {
     "express": "^5.2.1"
