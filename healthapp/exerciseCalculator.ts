@@ -11,7 +11,7 @@ interface Result {
     ratingDescription: "super bad" | "average result" | "super good!",
 }
 
-const calculateExercises = (hours: number[], target_p: number): Result => {
+export const calculateExercises = (hours: number[], target_p: number): Result => {
     if(hours.length == 0) throw new Error("array length is 0");
 
     const periodLength = hours.length;
@@ -71,5 +71,7 @@ const processArgs = (): Input => {
 };
 
 
-const input: Input = processArgs();
-console.log(calculateExercises(input.arr, input.target));
+if(process.argv[1] === import.meta.filename){
+    const input: Input = processArgs();
+    console.log(calculateExercises(input.arr, input.target));
+}
