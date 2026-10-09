@@ -8,26 +8,16 @@ const getEntries = (): PatientSafe[] => {
     return patients.map(({id, name, dateOfBirth,gender, occupation }) => ({ id, name, dateOfBirth,gender, occupation }));
 };
 
-const addEntry = (newPatient: NewPatientEntry): PatientSafe => {
+const addEntry = (newPatient: NewPatientEntry): Patient => {
 
     const patient: Patient = { 
         id: uuid(), 
         ...newPatient
-        //name: newPatient.name,
-        //dateOfBirth: newPatient.dateOfBirth,
-        //gender: newPatient.gender,
-        //occupation: newPatient.occupation,
     };
 
     patients.push(patient);
 
-    return {
-        id: patient.id,
-        name: patient.name,
-        dateOfBirth: patient.dateOfBirth,
-        gender: patient.gender,
-        occupation: patient.occupation
-    };
+    return patient;
 };
 
 export default {
