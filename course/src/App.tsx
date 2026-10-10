@@ -64,7 +64,7 @@ const Part = ({part}: {part: CoursePart}) => {
 
 const Content = ({courseParts}: {courseParts: CoursePart[]}) => {
   return (<div>
-    {courseParts.map(part => (<Part part={part}></Part>))}
+    {courseParts.map(part => (<Part part={part} key={part.name}></Part>))}
   </div>);
 }
 

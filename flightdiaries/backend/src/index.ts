@@ -1,10 +1,15 @@
 import express from 'express';
+import cors from 'cors';
 import diaryRouter from './routes/diaries.ts';
 
 const app = express();
 app.use(express.json());
 
 const PORT = 3000;
+
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
 
 app.get('/ping', (_req, res) => {
   console.log('someone pinged here');
