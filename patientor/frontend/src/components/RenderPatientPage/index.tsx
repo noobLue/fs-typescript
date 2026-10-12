@@ -1,12 +1,68 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { Diagnosis, Entry, Patient } from "../../types";
+import { Diagnosis, Entry, HealthCheckEntry, HospitalEntry, OccupationalHealthcareEntry, Patient, HealthCheckRating } from "../../types";
 import patientService from "../../services/patients";
 
 
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
+
+const HealthRatingBar = ({healthCheckRating}: {healthCheckRating: HealthCheckRating}) => {
+    switch(healthCheckRating) {
+        case HealthCheckRating.Healthy: 
+            return <div style={{color: "green"}}>Health is good!</div>;
+        case HealthCheckRating.LowRisk: 
+            return <div style={{color: "yellow"}}>Low health risk!</div>;
+        case HealthCheckRating.HighRisk: 
+            return <div style={{color: "orange"}}>High health risk!</div>;
+        case HealthCheckRating.CriticalRisk: 
+            return <div style={{color: "red"}}>Critical health risk!</div>;
+        default: 
+            return assertNever(healthCheckRating);
+    };
+};
+
+const HealthCheckComponent = ({entry}:{entry: HealthCheckEntry}) => {
+    return (<div>
+        <p>{entry.date} [HealthCheck]</p>
+        <HealthRatingBar healthCheckRating={entry.healthCheckRating}/>
+    </div>);
+};
+
+const OccupationalComponent = ({entry}: {entry: OccupationalHealthcareEntry}) => {
+    return (<div>
+        <p>{entry.date} [Occupational visit]</p>
+        <p>Employer: {entry.employerName}</p>
+        {entry.sickLeave && <p>Sick leave: {entry.sickLeave.startDate} - {entry.sickLeave.endDate}</p>}
+    </div>);
+};
+
+const HospitalComponent = ({entry}: {entry: HospitalEntry}) => {
+    return (<div>
+        <p>{entry.date} [Hospital visit]</p>
+        <p>discharge criteria: {entry.discharge.criteria} ({entry.discharge.date})</p>
+    </div>);
+};
+
+const EntryDetails = ({entry}: {entry: Entry}) => {
+    switch(entry.type){
+        case "HealthCheck":
+            return <HealthCheckComponent entry={entry}/>;
+        case "OccupationalHealthcare":
+            return <OccupationalComponent entry={entry}/>;
+        case "Hospital":
+            return <HospitalComponent entry={entry}/>;
+        default:
+            return assertNever(entry);
+    }
+};
+
 const DiagnosisComponent = ({code, diagnoses}: {code: string, diagnoses: Diagnosis[]}) => {
-    return <li key={code}>{code} {diagnoses.find(d => d.code === code)?.name}</li>;
+    return <li>{code} {diagnoses.find(d => d.code === code)?.name}</li>;
 };
 
 const DiagnosesComponent = ({codes, diagnoses}: {codes: string[], diagnoses: Diagnosis[]}) => {
@@ -16,9 +72,11 @@ const DiagnosesComponent = ({codes, diagnoses}: {codes: string[], diagnoses: Dia
 };
 
 const PatientEntry = ({entry, diagnoses}: {entry: Entry, diagnoses: Diagnosis[]}) => {
-    return <div>
-        {entry.date} <i>{entry.description}</i>
-        {entry.diagnosisCodes ? <DiagnosesComponent codes={entry.diagnosisCodes} diagnoses={diagnoses}/> : <div></div>}
+    return <div style={{border: "1px solid black", margin: "5px"}}>
+        <EntryDetails entry={entry}/>
+        <i>{entry.description}</i>
+        {entry.diagnosisCodes && <DiagnosesComponent codes={entry.diagnosisCodes} diagnoses={diagnoses}/>}
+        Diagnosed by {entry.specialist}
     </div>;
 };
 
