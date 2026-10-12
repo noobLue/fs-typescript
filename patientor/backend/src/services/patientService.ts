@@ -11,7 +11,8 @@ const getEntries = (): PatientSafe[] => {
 const addEntry = (newPatient: NewPatientEntry): Patient => {
 
     const patient: Patient = { 
-        id: uuid(), 
+        id: uuid(),
+        entries: [],
         ...newPatient
     };
 
@@ -20,7 +21,12 @@ const addEntry = (newPatient: NewPatientEntry): Patient => {
     return patient;
 };
 
+const getEntry = (id: string): Patient | undefined => {
+    return patients.find(p => p.id === id);
+};
+
 export default {
     getEntries,
-    addEntry
+    addEntry,
+    getEntry
 };
