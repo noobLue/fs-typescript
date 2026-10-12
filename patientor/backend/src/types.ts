@@ -25,14 +25,59 @@ export const NewPatientEntrySchema = z.object({
 export type NewPatientEntry = z.infer<typeof NewPatientEntrySchema>;
 
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface Entry {
-
+export interface BaseEntry {
+    id: string;
+    description: string;
+    date: string;
+    specialist: string;
+    diagnosisCodes?: Array<Diagnosis["code"]>;
 }
 
+
+export const HealthCheckRating = {
+  Healthy: 0,
+  LowRisk: 1,
+  HighRisk: 2,
+  CriticalRisk: 3,
+} as const;
+
+export type HealthCheckRating = typeof HealthCheckRating[keyof typeof HealthCheckRating];
+
+export interface HealthCheckEntry extends BaseEntry {
+    type: "HealthCheck";
+    healthCheckRating: HealthCheckRating;
+}
+
+
+export interface SickLeave {
+    startDate: string;
+    endDate: string;
+}
+
+export interface OccupationalHealthcareEntry extends BaseEntry {
+    type: "OccupationalHealthcare";
+    employerName: string;
+    sickLeave?: SickLeave;
+}
+
+export interface Discharge{
+    date: string;
+    criteria: string;
+}
+
+export interface HospitalEntry extends BaseEntry {
+    type: "Hospital";
+    discharge: Discharge;
+}
+
+export type Entry = HealthCheckEntry | OccupationalHealthcareEntry | HospitalEntry;
+
+type UnionOmit<T,K extends string | number | symbol> = T extends unknown ? Omit<T,K> : never;
+export type EntryWithoutId = UnionOmit<Entry, "id">;
+
 export interface Patient extends NewPatientEntry {
-    id: string,
-    entries: Entry[]
+    id: string;
+    entries: Entry[];
 }
 
 export type PatientSafe = Omit<Patient, 'ssn' | 'entries'>;
