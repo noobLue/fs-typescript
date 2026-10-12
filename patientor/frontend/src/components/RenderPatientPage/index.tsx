@@ -1,24 +1,35 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { Entry, Patient } from "../../types";
+import { Diagnosis, Entry, Patient } from "../../types";
 import patientService from "../../services/patients";
 
 
-const PatientEntries = ({patientEntries}: {patientEntries: Entry[]}) => {
-    return (<div>Here are the entries {patientEntries.map(e => {
-        return <div key={e.id}>
-            {e.date} <i>{e.description}</i>
-            {e.diagnosisCodes ? <ul>{e.diagnosisCodes.map(d => {
-                return <li key={d}>{d}</li>;
-            })}</ul> : <div></div>}
-            
-        </div>;
-    })}</div>);
+const DiagnosisComponent = ({code, diagnoses}: {code: string, diagnoses: Diagnosis[]}) => {
+    return <li key={code}>{code} {diagnoses.find(d => d.code === code)?.name}</li>;
+};
+
+const DiagnosesComponent = ({codes, diagnoses}: {codes: string[], diagnoses: Diagnosis[]}) => {
+    return <ul>{codes.map(d => {
+        return <DiagnosisComponent code={d} diagnoses={diagnoses} key={d}/>;
+    })}</ul>;
+};
+
+const PatientEntry = ({entry, diagnoses}: {entry: Entry, diagnoses: Diagnosis[]}) => {
+    return <div>
+        {entry.date} <i>{entry.description}</i>
+        {entry.diagnosisCodes ? <DiagnosesComponent codes={entry.diagnosisCodes} diagnoses={diagnoses}/> : <div></div>}
+    </div>;
+};
+
+const PatientEntries = ({patientEntries, diagnoses}: {patientEntries: Entry[], diagnoses: Diagnosis[]}) => {
+    return <div>{patientEntries.map(e => {
+        return <PatientEntry key={e.id} entry={e} diagnoses={diagnoses}/>;
+    })}</div>;
 };
 
 
-const RenderPatientPage = ( ) => {
+const RenderPatientPage = ({diagnoses}: {diagnoses: Diagnosis[]}) => {
   const { id } = useParams(); 
   const [patient, setPatient] = useState<Patient>();
 
@@ -41,7 +52,7 @@ const RenderPatientPage = ( ) => {
     <p>date of birth: {patient.dateOfBirth}</p>
 
     <h2>Entries</h2>
-    <p>{patient.entries ? <PatientEntries patientEntries={patient.entries}></PatientEntries> : <div></div>}</p>
+    {<PatientEntries patientEntries={patient.entries} diagnoses={diagnoses}></PatientEntries>}
   </div>);
 };
 
