@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { Diagnosis, Entry, HealthCheckEntry, HospitalEntry, OccupationalHealthcareEntry, Patient, HealthCheckRating } from "../../types";
+import { Diagnosis, Entry, HealthCheckEntry, HospitalEntry, OccupationalHealthcareEntry, Patient, HealthCheckRating, EntryWithoutId } from "../../types";
 import patientService from "../../services/patients";
+import EntryForm from "./EntryForm";
+import axios from "axios";
 
 
 const assertNever = (value: never): never => {
   throw new Error(
-    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+    `Invalid option: ${JSON.stringify(value)}`
   );
 };
 
@@ -90,6 +92,7 @@ const PatientEntries = ({patientEntries, diagnoses}: {patientEntries: Entry[], d
 const RenderPatientPage = ({diagnoses}: {diagnoses: Diagnosis[]}) => {
   const { id } = useParams(); 
   const [patient, setPatient] = useState<Patient>();
+  const [errors, setErrors] = useState<string[]>([]);
 
   useEffect(() => {
     if(!id) return;
@@ -101,9 +104,33 @@ const RenderPatientPage = ({diagnoses}: {diagnoses: Diagnosis[]}) => {
     void fetchPatient();
   }, [id]);
 
+  const submitEntry = async (newEntry: EntryWithoutId) => {
+    if(!patient) return;
+
+    try {
+        const entry = await patientService.createEntry(patient.id, newEntry);
+        setPatient({...patient, entries: patient.entries.concat(entry)});
+
+    } catch (error) {
+        if(axios.isAxiosError(error))
+        {
+            const data = error.response?.data;
+            if(data && Array.isArray(data.error))
+            {
+                setErrors(data.error.map((e: {message: string}) => e.message));
+            }
+        }
+        else 
+        {
+            setErrors(["Unknown Error"]);
+        }
+    }
+  };
+
   if(!patient) return <div>loading</div>;
 
   return (<div>
+    {errors.length>0 && <div style={{background:"pink" }}>{errors.map(em => `${em}, `)}</div>}
     <h1>{patient.name} ({patient.gender})</h1>
     <p>ssn: {patient.ssn}</p>
     <p>occupation: {patient.occupation}</p>
@@ -111,6 +138,7 @@ const RenderPatientPage = ({diagnoses}: {diagnoses: Diagnosis[]}) => {
 
     <h2>Entries</h2>
     {<PatientEntries patientEntries={patient.entries} diagnoses={diagnoses}></PatientEntries>}
+    {<EntryForm diagnoses={diagnoses} submitEntry={submitEntry}/>}
   </div>);
 };
 
