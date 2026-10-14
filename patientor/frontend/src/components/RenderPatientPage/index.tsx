@@ -94,6 +94,8 @@ const RenderPatientPage = ({diagnoses}: {diagnoses: Diagnosis[]}) => {
   const [patient, setPatient] = useState<Patient>();
   const [errors, setErrors] = useState<string[]>([]);
 
+  const [showForm, setShowForm] = useState(false);
+
   useEffect(() => {
     if(!id) return;
     
@@ -138,7 +140,9 @@ const RenderPatientPage = ({diagnoses}: {diagnoses: Diagnosis[]}) => {
 
     <h2>Entries</h2>
     {<PatientEntries patientEntries={patient.entries} diagnoses={diagnoses}></PatientEntries>}
-    {<EntryForm diagnoses={diagnoses} submitEntry={submitEntry}/>}
+    {!showForm && <button onClick={()=>setShowForm(true)}>Add New Entry</button>}
+    {showForm && <EntryForm diagnoses={diagnoses} submitEntry={submitEntry}/>}
+    {showForm && <button onClick={()=>setShowForm(false)}>Cancel</button>}
   </div>);
 };
 

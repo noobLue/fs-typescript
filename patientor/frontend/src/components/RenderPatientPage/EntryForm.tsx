@@ -133,7 +133,7 @@ const EntryForm = ({diagnoses, submitEntry}:{diagnoses: Diagnosis[], submitEntry
         {entryType === "OccupationalHealthcare" && <OccupationalHealthcare employerName={employerName} setEmployerName={setEmployerName} sickLeaveStart={sickLeaveStart} setSickLeaveStart={setSickLeaveStart} sickLeaveEnd={sickLeaveEnd} setSickLeaveEnd={setSickLeaveEnd}/>}
         {entryType === "Hospital" && <Hospital dischargeDate={dischargeDate} dischargeCriteria={dischargeCriteria} setDischargeDate={setDischargeDate} setDischargeCriteria={setDischargeCriteria} />}
 
-        <button>Submit</button>
+        <button>Add</button>
     </form>;
 };
 

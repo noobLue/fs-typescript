@@ -42,7 +42,6 @@ export const NewPatientEntryParser = (req: Request, _res: Response, next: NextFu
 export const ErrorMiddleware = (error:unknown, _req: Request, res: Response, next: NextFunction) => {
     if(error instanceof z.ZodError)
     {
-        console.log(error);
         res.status(400).send({ error: error.issues });
     }
     else 
