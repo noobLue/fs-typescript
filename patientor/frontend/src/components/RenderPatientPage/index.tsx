@@ -141,7 +141,7 @@ const RenderPatientPage = ({diagnoses}: {diagnoses: Diagnosis[]}) => {
     <h2>Entries</h2>
     {<PatientEntries patientEntries={patient.entries} diagnoses={diagnoses}></PatientEntries>}
     {!showForm && <button onClick={()=>setShowForm(true)}>Add New Entry</button>}
-    {showForm && id && <EntryForm diagnoses={diagnoses} submitEntry={submitEntry} id={id}/>}
+    {showForm && id && <EntryForm diagnoses={diagnoses} submitEntry={submitEntry}/>}
     {showForm && <button onClick={()=>setShowForm(false)}>Cancel</button>}
   </div>);
 };

@@ -56,7 +56,7 @@ const Part = ({part}: {part: CoursePart}) => {
       </div>);
     case "special":
       return (<div>
-        <h3>{part.name} {part.exerciseCount}</h3> <p><i>{part.description}</i></p> <p>{part.requirements}</p>
+        <h3>{part.name} {part.exerciseCount}</h3> <p><i>{part.description}</i></p> <p>{part.requirements.join(", ")}</p>
       </div>);
     default:
       return assertNever(part);

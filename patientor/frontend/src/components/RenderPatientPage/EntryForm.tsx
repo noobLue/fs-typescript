@@ -27,7 +27,7 @@ const OccupationalHealthcare = ({employerName, sickLeaveStart, sickLeaveEnd, set
             Sick leave start <input value={sickLeaveStart} type="date" onChange={({target}) => setSickLeaveStart(target.value)} ></input>
         </label></div>
         <div><label>        
-            Sick leave start <input value={sickLeaveEnd} type="date" onChange={({target}) => setSickLeaveEnd(target.value)} ></input>
+            Sick leave end <input value={sickLeaveEnd} type="date" onChange={({target}) => setSickLeaveEnd(target.value)} ></input>
 </label></div>
     </div>);
 };
@@ -43,9 +43,8 @@ const Hospital = ({dischargeDate, dischargeCriteria, setDischargeDate, setDischa
 
 };
 
-const EntryForm = ({diagnoses, submitEntry, id}:{diagnoses: Diagnosis[], submitEntry: (entry: EntryWithoutId) => void, id: string}) => {
+const EntryForm = ({diagnoses, submitEntry}:{diagnoses: Diagnosis[], submitEntry: (entry: EntryWithoutId) => void}) => {
     const [entryType, setEntryType] = useState<EntryType>("HealthCheck");
-    const [errorMessage, setErrorMessage] = useState("");
 
     const [inputDiagnoses, setInputDiagnoses] = useState<string[]>([]);
     const [description, setDescription] = useState("");
@@ -67,12 +66,6 @@ const EntryForm = ({diagnoses, submitEntry, id}:{diagnoses: Diagnosis[], submitE
 
     const postEntry = (event: SyntheticEvent) => {
         event.preventDefault();
-
-        if(!id)
-        {
-            setErrorMessage("Unexpected patient error");
-            return;
-        }
 
         const baseEntry = {diagnosisCodes: inputDiagnoses, description, date, specialist};
 
@@ -102,7 +95,6 @@ const EntryForm = ({diagnoses, submitEntry, id}:{diagnoses: Diagnosis[], submitE
     };
     
     return <form onSubmit={postEntry} style={{border: "1px solid black", margin: "5px", padding: "10px" }}>
-        {errorMessage.length > 0 && <div>Error: {errorMessage}</div>}
         Add a new Entry 
         <select value={entryType} onChange={({target})=>setEntryType(target.value as EntryType)}>
             <option value="HealthCheck">HealthCheck</option>

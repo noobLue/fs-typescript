@@ -70,7 +70,7 @@ function App() {
     <div>
       {diaries.map(d => (<div key={d.id}>{d.date} {d.visibility} {d.weather}</div>))}
 
-      <p style={{color: "red"}}>{errorMessages.map((msg)=><p key={msg}>Error: {msg}</p>)}</p>
+      <div style={{color: "red"}}>{errorMessages.map((msg)=><p key={msg}>Error: {msg}</p>)}</div>
       <form onSubmit={submitDiary}>
         <div>
           Weather {Object.values(Weather).map(w => {
