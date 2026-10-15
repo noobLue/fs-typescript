@@ -1,5 +1,5 @@
-import axios, { type AxiosResponse } from 'axios';
-import { useState, useEffect } from 'react'
+import axios, { type AxiosResponse } from "axios";
+import { useState, useEffect } from "react"
 import { Visibility, Weather, type DiaryEntry, type NewDiaryEntry, type NonSensitiveDiaryEntry } from "./types.ts";
 
 
@@ -23,7 +23,7 @@ function App() {
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/diaries').then(res => {
+    axios.get("http://localhost:3000/api/diaries").then(res => {
       setDiaries(res.data as NonSensitiveDiaryEntry[]);
     });
   }, [])

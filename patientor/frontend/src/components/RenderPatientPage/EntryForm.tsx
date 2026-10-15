@@ -1,5 +1,4 @@
 import { SyntheticEvent, useState } from "react";
-import { useParams } from "react-router-dom";
 import { Diagnosis, EntryWithoutId, HealthCheckRating } from "../../types";
 
 type EntryType = "HealthCheck" | "OccupationalHealthcare" | "Hospital"; 
@@ -44,12 +43,9 @@ const Hospital = ({dischargeDate, dischargeCriteria, setDischargeDate, setDischa
 
 };
 
-const EntryForm = ({diagnoses, submitEntry}:{diagnoses: Diagnosis[], submitEntry: (entry: EntryWithoutId) => void}) => {
-    const { id } = useParams<{ id: string }>();
-
+const EntryForm = ({diagnoses, submitEntry, id}:{diagnoses: Diagnosis[], submitEntry: (entry: EntryWithoutId) => void, id: string}) => {
     const [entryType, setEntryType] = useState<EntryType>("HealthCheck");
     const [errorMessage, setErrorMessage] = useState("");
-
 
     const [inputDiagnoses, setInputDiagnoses] = useState<string[]>([]);
     const [description, setDescription] = useState("");
@@ -72,22 +68,14 @@ const EntryForm = ({diagnoses, submitEntry}:{diagnoses: Diagnosis[], submitEntry
     const postEntry = (event: SyntheticEvent) => {
         event.preventDefault();
 
-        console.log("playerid", id);
         if(!id)
         {
             setErrorMessage("Unexpected patient error");
             return;
         }
 
-        console.log(entryType); 
-
-        console.log(inputDiagnoses);
-        console.log(description);
-        console.log(date);
-        console.log(specialist);
         const baseEntry = {diagnosisCodes: inputDiagnoses, description, date, specialist};
 
-        console.log(healthCheckRating);
         if(entryType === "HealthCheck")
         {
             submitEntry({...baseEntry, type: entryType, healthCheckRating});
